@@ -21,8 +21,8 @@ defmodule Maple.Client do
   end
 
   defp headers() do
-    if(Application.get_env(:maple, :token)) do
-      %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client", "Authorization" =>"Bearer #{Application.get_env(:maple, :token)}"}
+    if(Application.get_env(:maple, :additional_headers)) do
+      Map.merge(%{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}, Application.get_env(:maple, :additional_headers))
     else
       %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}
     end
