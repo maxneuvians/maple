@@ -81,6 +81,17 @@ through the struct for validation.
 
 Contributions and issues welcome!
 
+__Also if you think this is a terrible idea, please let me know!__
+
+## ToDo
+
+- [ ] Refactor macro code
+- [ ] Add proper documentation
+- [ ] Support subscriptions
+- [ ] Look into validation through structs
+- [ ] Expand help with required attributes
+- [ ] Expand help with attribute descriptions
+
 ## License
 MIT
 
