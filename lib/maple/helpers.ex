@@ -9,7 +9,7 @@ defmodule Maple.Helpers do
       param_types: get_param_types(func["args"]),
       deprecated: func["isDeprecated"],
       deprecated_reason: func["deprecationReason"],
-      description: if(func["description"] == nil, do: "No description available", else: func["description"])
+      description: generate_help(func)
     }
   end
 
@@ -52,6 +52,24 @@ defmodule Maple.Helpers do
       "String" -> "\"#{value}\""
       _ -> value
     end
+  end
+
+  defp generate_help(func) do
+    """
+    #{if(func["description"], do: func["description"], else: "No description available")}
+    \n
+    """
+    <>
+    (func["args"]
+    |> Enum.map(fn arg ->
+      """
+      Param name: #{arg["name"]}
+      - Description: #{if(arg["description"], do: arg["description"], else: "No description ")}
+      - Type: #{if(arg["type"]["ofType"]["name"], do: arg["type"]["ofType"]["name"], else: "Not defined")}
+      - Required: #{if(arg["type"]["kind"] == "NON_NULL", do: "Yes", else: "No")}
+      """
+    end)
+    |> Enum.join("\n"))
   end
 
 end

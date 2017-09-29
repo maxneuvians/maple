@@ -25,11 +25,17 @@ So you can do the following:
 iex(1)> c "examples/github.ex", "." # We need to compile the BEAM file to access the documentation
 [Maple.Examples.Github, Maple.Examples.Github.Config]
 
-iex(2)> h Maple.Examples.Github.viewer/1
+iex(2)> h Maple.Examples.Github.user
 
-                               def viewer(fields)
+                            def user(params, fields)
 
-The currently authenticated user.
+Lookup a user by login.
+
+Param name: login
+
+  • Description: The user's login.
+  • Type: String
+  • Required: Yes
 
 iex(3)> Maple.Examples.Github.viewer("login")
 %Maple.Response{body: %{"viewer" => %{"login" => "maxneuvians"}}, status: 200}
@@ -64,7 +70,7 @@ If you only access one GraphQL API you just need to add the following to you con
 ```
 config :maple,
   api_url: "URL",
-  token: "TOKEN" # Only if you need a bearer token to access the API ex. GitHub
+  additional_headers: %{"Authorization": "Bearer TOKEN"} # If you have any additional headers
 ```
 
 
@@ -91,8 +97,8 @@ __Also if you think this is a terrible idea, please let me know!__
 - [ ] Add proper documentation
 - [ ] Support subscriptions
 - [ ] Look into validation through structs
-- [ ] Expand help with required attributes
-- [ ] Expand help with attribute descriptions
+- [X] Expand help with required attributes
+- [X] Expand help with attribute descriptions
 
 ## License
 MIT
