@@ -1,0 +1,13 @@
+%{"certifi": {:hex, :certifi, "2.0.0", "a0c0e475107135f76b8c1d5bc7efb33cd3815cb3cf3dea7aefdd174dabead064", [:rebar3], []},
+  "hackney": {:hex, :hackney, "1.9.0", "51c506afc0a365868469dcfc79a9d0b94d896ec741cfd5bd338f49a5ec515bfe", [:rebar3], [{:certifi, "2.0.0", [hex: :certifi, optional: false]}, {:idna, "5.1.0", [hex: :idna, optional: false]}, {:metrics, "1.0.1", [hex: :metrics, optional: false]}, {:mimerl, "1.0.2", [hex: :mimerl, optional: false]}, {:ssl_verify_fun, "1.1.1", [hex: :ssl_verify_fun, optional: false]}]},
+  "httpoison": {:hex, :httpoison, "0.13.0", "bfaf44d9f133a6599886720f3937a7699466d23bb0cd7a88b6ba011f53c6f562", [:mix], [{:hackney, "~> 1.8", [hex: :hackney, optional: false]}]},
+  "httpotion": {:hex, :httpotion, "3.0.3", "17096ea1a7c0b2df74509e9c15a82b670d66fc4d66e6ef584189f63a9759428d", [:mix], [{:ibrowse, "~> 4.4", [hex: :ibrowse, optional: false]}]},
+  "ibrowse": {:hex, :ibrowse, "4.4.0", "2d923325efe0d2cb09b9c6a047b2835a5eda69d8a47ed6ff8bc03628b764e991", [:rebar3], []},
+  "idna": {:hex, :idna, "5.1.0", "d72b4effeb324ad5da3cab1767cb16b17939004e789d8c0ad5b70f3cea20c89a", [:rebar3], [{:unicode_util_compat, "0.3.1", [hex: :unicode_util_compat, optional: false]}]},
+  "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [:rebar3], []},
+  "mime": {:hex, :mime, "1.1.0", "01c1d6f4083d8aa5c7b8c246ade95139620ef8effb009edde934e0ec3b28090a", [:mix], []},
+  "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], []},
+  "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], []},
+  "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], []},
+  "tesla": {:hex, :tesla, "0.8.0", "7ab982acda2d049b3810065b22a86602223dc191e612dd129ed4feeefce7993a", [:mix], [{:exjsx, ">= 0.1.0", [hex: :exjsx, optional: true]}, {:fuse, "~> 2.4", [hex: :fuse, optional: true]}, {:hackney, "~> 1.6", [hex: :hackney, optional: true]}, {:ibrowse, "~> 4.2", [hex: :ibrowse, optional: true]}, {:mime, "~> 1.0", [hex: :mime, optional: false]}, {:poison, ">= 1.0.0", [hex: :poison, optional: true]}]},
+  "unicode_util_compat": {:hex, :unicode_util_compat, "0.3.1", "a1f612a7b512638634a603c8f401892afbf99b8ce93a45041f8aaca99cadb85e", [:rebar3], []}}
