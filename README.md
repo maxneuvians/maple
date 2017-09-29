@@ -47,6 +47,8 @@ which match the GraphQL `params` and `query` string concept.
 
 Function names are changed from camel to snake case. ex `listUsers` becomes `list_users`.
 
+Take a look at `examples/` for more examples.
+
 ## Installation
 
 ```elixir
