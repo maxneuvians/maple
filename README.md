@@ -57,7 +57,15 @@ end
 
 ## Configuration
 
-If you only access one end p
+If you only access one GraphQL API you just need to add the following to you config.exs
+
+```
+config :maple,
+  api_url: "URL",
+  token: "TOKEN" # Only if you need a bearer token to access the API ex. GitHub
+```
+
+
 
 ## Ramblings
 
@@ -69,7 +77,9 @@ Compare `test/support/test_adapter.ex` and `lib/maple/client.ex` to see an examp
 on local JSON schema files. ex. `test\data\schema.json`
 
 The library can also create structs based on GraphQL types (currently commented out). The idea was to parse the result data
-through the struct for validation
+through the struct for validation.
+
+Contributions and issues welcome!
 
 ## License
 MIT
