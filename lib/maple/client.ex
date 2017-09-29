@@ -16,15 +16,15 @@ defmodule Maple.Client do
 
   defp execute(string) do
     query = %{query: string} |> Poison.encode!
-    HTTPotion.post!(Application.get_env(:maple, :api_url), [body: query, headers: headers()])
+    Tesla.post(Application.get_env(:maple, :api_url), query, headers: headers())
     |> Maple.Response.parse
   end
 
   defp headers() do
     if(Application.get_env(:maple, :token)) do
-      ["Content-Type": "application/json", "User-Agent": "Maple GraphQL Client", "Authorization": "Bearer #{Application.get_env(:maple, :token)}"]
+      %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client", "Authorization" =>"Bearer #{Application.get_env(:maple, :token)}"}
     else
-      ["Content-Type": "application/json", "User-Agent": "Maple GraphQL Client"]
+      %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}
     end
   end
 end
