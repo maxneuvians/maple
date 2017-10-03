@@ -52,7 +52,7 @@ iex(5)> Maple.Examples.Github.user(%{},"name")
 
 `query` functions can are either arity `/1` or `/2` depending if they have required params. `mutation` functions
 are always arity `/2`. Arity `/2` functions always take a `map` as the first argument and a `string` as the second,
-which match the GraphQL `params` and `query` string concept.
+which match the GraphQL `params` and `fields` concept.
 
 Function names are changed from camel to snake case. ex `listUsers` becomes `list_users`.
 
