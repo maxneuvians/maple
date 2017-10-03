@@ -68,7 +68,7 @@ end
 
 or
 
-``elixir
+```elixir
 def deps do
   [{:maple, "~> 0.1.0"}]
 end
@@ -83,8 +83,6 @@ config :maple,
   api_url: "URL",
   additional_headers: %{"Authorization": "Bearer TOKEN"} # If you have any additional headers
 ```
-
-
 
 ## Ramblings
 
