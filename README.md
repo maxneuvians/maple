@@ -63,6 +63,14 @@ def deps do
 end
 ```
 
+or
+
+``elixir
+def deps do
+  [{:maple, "~> 0.1.0"}]
+end
+```
+
 ## Configuration
 
 If you only access one GraphQL API you just need to add the following to you config.exs
