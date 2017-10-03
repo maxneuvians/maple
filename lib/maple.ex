@@ -1,8 +1,8 @@
 defmodule Maple do
   @moduledoc """
   The purpose of this module is to parse a GraphQL schema and to dynamically create
-  easy to use functions at compile time with which a user can execute queries and
-  mutations on the GraphQL database.
+  easy to use client code functions at compile time with which a user can execute queries and
+  mutations on a GraphQL endpoint.
 
   The module is built in such a way that you can pass it it the string name of an
   adapter module. Please take a look at `Maple.Behaviours.Adapter` for the expected

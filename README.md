@@ -115,4 +115,4 @@ __Also if you think this is a terrible idea, please let me know!__
 MIT
 
 ## Version
-0.1.0
+0.1.1

@@ -3,7 +3,7 @@ defmodule Maple.Mixfile do
 
   def project do
     [app: :maple,
-     version: "0.1.0",
+     version: "0.1.1",
      source_url: "https://github.com/maxneuvians/maple",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
@@ -38,7 +38,7 @@ defmodule Maple.Mixfile do
 
   defp description do
     """
-    Maple is an automatic, compile time, code generator for GraphQL schemas. At best it creates easy to use
+    Maple is an automatic, compile time, client code generator for GraphQL schemas. At best it creates easy to use
     API functions for use in your code. At worst it can be used as a CLI for a GraphQL API.
     """
   end
