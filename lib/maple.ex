@@ -1,4 +1,17 @@
 defmodule Maple do
+  @moduledoc """
+  The purpose of this module is to parse a GraphQL schema and to dynamically create
+  easy to use functions at compile time with which a user can execute queries and
+  mutations on the GraphQL database.
+
+  The module is built in such a way that you can pass it it the string name of an
+  adapter module. Please take a look at `Maple.Behaviours.Adapter` for the expected
+  behaviour. For an example and the default implementation, please refer to
+  `Maple.Client`.
+
+  Note: The module currently includes commented out, experimental code to create structs
+  from the complex type definitions in a GraphQL schema.
+  """
   @known_types ~w(
     __Directive
     __DirectiveLocation
@@ -24,97 +37,56 @@ defmodule Maple do
 
   defmacro generate_graphql_functions(adapter \\ "Elixir.Maple.Client") do
     adapter = String.to_atom(adapter)
+
     schema =
-      apply(adapter, :schema, [])
+      adapter
+      |> apply(:schema, [])
       |> Map.get("__schema")
 
     mutationTypeName = schema["mutationType"]["name"]
     queryTypeName = schema["queryType"]["name"]
 
     schema["types"]
-    |> Enum.map(fn type ->
+    |> Enum.reduce([], fn type, acc ->
       cond do
 
         type["name"] == mutationTypeName ->
 
           #Create mutation functions
-          Enum.map(type["fields"], fn func ->
-            function = Helpers.assign_function_params(func)
-            quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-              Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 2}, [:params, :fields], f[:description])
-              def unquote(f[:function_name])(params, fields) do
-                missing = Helpers.find_missing(params, unquote(f[:required_params]))
-                Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
-                if missing != [] do
-                  {:error, "Mutation is missing the following required params: #{Enum.join(missing, ", ")}"}
-                else
-                  mutation = """
-                    {
-                      #{unquote(f[:name])}(#{Helpers.join_params(params, unquote(Macro.escape(f[:param_types])))})
-                        {
-                          #{fields}
-                        }
-                    }
-                  """
-                  apply(unquote(adapter), :mutate, [mutation])
-                end
-              end
-            end
-          end)
+          acc ++
+            Enum.map(type["fields"], fn func ->
+              function = Helpers.assign_function_params(func)
+              Helpers.generate_mutation(function, adapter)
+            end)
 
         type["name"] == queryTypeName ->
+
           #Create query functions
-          Enum.map(type["fields"], fn func ->
-            function = Helpers.assign_function_params(func)
-
-            # Check if we can create a query function with /1 when there are no required params
-            functions = if(length(function[:required_params]) == 0) do
-              [quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-                Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 1}, [:fields], f[:description])
-                def unquote(f[:function_name])(fields) do
-                  Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
-                  query = "{#{unquote(f[:name])}{#{fields}}}"
-                  apply(unquote(adapter), :query, [query])
-                end
-              end]
-            else
-              []
-            end
-
-            # Create regular query function with /2
-            functions = functions ++ [quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-              Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 2}, [:params, :fields], f[:description])
-              def unquote(f[:function_name])(params, fields) do
-                missing = Helpers.find_missing(params, unquote(f[:required_params]))
-                Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:eprecated_reason]))
-                if missing != [] do
-                  {:error, "Query is missing the following required params: #{Enum.join(missing, ", ")}"}
-                else
-                  query = """
-                    {
-                      #{unquote(f[:name])}
-                        #{if(length(Map.keys(params)) > 0, do: "(#{Helpers.join_params(params, unquote(Macro.escape(f[:param_types])))})")}
-                        {#{fields}}
-                    }
-                  """
-                  apply(unquote(adapter), :query, [query])
-                end
+          acc ++
+            Enum.map(type["fields"], fn func ->
+              function = Helpers.assign_function_params(func)
+              # Check if we can create a query function with /1 when there are no required params
+              if(length(function[:required_params]) == 0) do
+                [
+                  Helpers.generate_one_arity_query(function, adapter),
+                  Helpers.generate_two_arity_query(function, adapter)
+                ]
+              else
+                [Helpers.generate_two_arity_query(function, adapter)]
               end
-            end]
-            List.flatten(functions)
           end)
 
         #!Enum.member?(@known_types, type["name"]) && type["fields"] ->
         #  # Create structs
-        #  quote do
-        #    defmodule unquote(Module.concat(["Maple", "Types", type["name"]])) do
-        #      defstruct Enum.map(unquote(Macro.escape(type["fields"])), &(String.to_atom(&1["name"])))
-        #    end
-        #  end
+        #   acc ++
+        #     quote do
+        #       defmodule unquote(Module.concat(["Maple", "Types", type["name"]])) do
+        #         defstruct Enum.map(unquote(Macro.escape(type["fields"])), &(String.to_atom(&1["name"])))
+        #       end
+        #   end
 
-        true -> true
+        true -> acc
       end
     end)
-    |> List.flatten
   end
 end

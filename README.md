@@ -93,8 +93,8 @@ __Also if you think this is a terrible idea, please let me know!__
 
 ## ToDo
 
-- [ ] Refactor macro code
-- [ ] Add proper documentation
+- [X] Refactor macro code
+- [X] Add proper documentation
 - [ ] Support subscriptions
 - [ ] Look into validation through structs
 - [X] Expand help with required attributes

@@ -1,5 +1,7 @@
 defmodule Maple.Behaviours.Adapter do
-  @moduledoc "Defines behaviour for an adapter to query a GraphQL server"
+  @moduledoc """
+  Defines behaviour for an adapter to query a GraphQL server
+  """
 
   @callback mutate(any) :: any
   @callback query(any) :: any
