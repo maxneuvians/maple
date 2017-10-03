@@ -1,5 +1,8 @@
 # Maple
 
+[![Master](https://travis-ci.org/maxneuvians/maple.svg?branch=master)](https://travis-ci.org/maxneuvians/maple)
+
+
 Maple is an automatic, compile time, code generator for GraphQL schemas. At best it creates easy to use
 API functions for use in your code. At worst it can be used as a CLI for a GraphQL API.
 
