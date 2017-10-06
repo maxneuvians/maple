@@ -70,7 +70,7 @@ or
 
 ```elixir
 def deps do
-  [{:maple, "~> 0.1.0"}]
+  [{:maple, "~> 0.1.2"}]
 end
 ```
 
@@ -113,4 +113,4 @@ __Also if you think this is a terrible idea, please let me know!__
 MIT
 
 ## Version
-0.1.1
+0.1.2

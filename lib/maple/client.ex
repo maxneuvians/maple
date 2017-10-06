@@ -7,21 +7,21 @@ defmodule Maple.Client do
   @behaviour Maple.Behaviours.Adapter
 
   @doc """
-  Takes a GraphQL mutation string and executes it
-  against a remove server
+  Takes a GraphQL mutation string and a map of parameters
+  and executes it against a remove server
   """
-  @spec mutate(String.t) :: %Maple.Response{}
-  def mutate(string) do
-    execute("mutation " <> string)
+  @spec mutate(String.t, map()) :: %Maple.Response{}
+  def mutate(string, params) do
+    execute("mutation " <> string, params)
   end
 
   @doc """
-  Takes a GraphQL query string and executes it
-  against a remove server
+  Takes a GraphQL query string and a map of parameters
+  and executes it against a remove server
   """
-  @spec query(String.t) :: %Maple.Response{}
-  def query(string) do
-    execute("query " <> string)
+  @spec query(String.t, map()) :: %Maple.Response{}
+  def query(string, params) do
+    execute("query " <> string, params)
   end
 
   @doc """
@@ -39,9 +39,12 @@ defmodule Maple.Client do
   Executes the GraphQL command against a remote server
   """
   @spec execute(String.t) :: %Maple.Response{}
-  defp execute(string) do
+  defp execute(string, params \\ %{}) do
     query =
-      %{query: string}
+      %{
+        query: string,
+        variables: params
+      }
       |> Poison.encode!
 
     Application.get_env(:maple, :api_url)
@@ -56,7 +59,7 @@ defmodule Maple.Client do
   """
   @spec headers() :: map()
   defp headers() do
-    if(Application.get_env(:maple, :additional_headers)) do
+    if Application.get_env(:maple, :additional_headers)  do
       Map.merge(%{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}, Application.get_env(:maple, :additional_headers))
     else
       %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}

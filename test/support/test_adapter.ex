@@ -1,14 +1,14 @@
 defmodule Maple.TestAdapter do
 
-  def mutate(string) do
+  def mutate(string, %{}) do
     string
   end
 
-  def query("{listWidgets{id}}") do
+  def query("{listWidgets{id}}", %{}) do
     %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]}
   end
 
-  def query(string) do
+  def query(string, %{}) do
     string
   end
 

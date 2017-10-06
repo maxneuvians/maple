@@ -43,14 +43,14 @@ defmodule Maple do
       |> apply(:schema, [])
       |> Map.get("__schema")
 
-    mutationTypeName = schema["mutationType"]["name"]
-    queryTypeName = schema["queryType"]["name"]
+    mutation_type_name = schema["mutationType"]["name"]
+    query_type_name = schema["queryType"]["name"]
 
     schema["types"]
     |> Enum.reduce([], fn type, acc ->
       cond do
 
-        type["name"] == mutationTypeName ->
+        type["name"] == mutation_type_name ->
 
           #Create mutation functions
           acc ++
@@ -59,14 +59,14 @@ defmodule Maple do
               Helpers.generate_mutation(function, adapter)
             end)
 
-        type["name"] == queryTypeName ->
+        type["name"] == query_type_name ->
 
           #Create query functions
           acc ++
             Enum.map(type["fields"], fn func ->
               function = Helpers.assign_function_params(func)
               # Check if we can create a query function with /1 when there are no required params
-              if(length(function[:required_params]) == 0) do
+              if length(function[:required_params]) == 0 do
                 [
                   Helpers.generate_one_arity_query(function, adapter),
                   Helpers.generate_two_arity_query(function, adapter)

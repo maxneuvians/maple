@@ -32,6 +32,17 @@ defmodule MapleTest.Maple.HelpersTest do
     assert result.description == "No description available\n\n\n"
   end
 
+  test "declare_params/1 creates a GraphQL param list" do
+    data = %{id: "1", name: "Foo"}
+    assert Helpers.declare_params(data) == "id: $id, name: $name"
+  end
+
+  test "declare_variables/2 creates a GraphQL variable list" do
+    data = %{id: "1", name: "Foo"}
+    types = %{"id" => "Integer", "name" => "String"}
+    assert Helpers.declare_variables(data, types) == "$id: Integer!, $name: String!"
+  end
+
   test "deprecated/3 logs a warning if function is deprecated" do
     assert capture_log(fn ->
       assert Helpers.deprecated?(true, "test", "test") == nil
@@ -124,18 +135,6 @@ defmodule MapleTest.Maple.HelpersTest do
         }
     }]
     assert Helpers.get_required_params(data) == [:id]
-  end
-
-  test "join_params/2 joins a map of key-valua pairs in GraphQL syntax" do
-    data = %{name: "Foo"}
-    types = %{"name" => "String"}
-    assert Helpers.join_params(data, types) == "name: \"Foo\""
-  end
-
-  test "join_params/2 joins a map of key-valua pairs in GraphQL syntax with commas" do
-    data = %{id: "1", name: "Foo"}
-    types = %{"id" => "Integer", "name" => "String"}
-    assert Helpers.join_params(data, types) == "id: 1, name: \"Foo\""
   end
 
 end

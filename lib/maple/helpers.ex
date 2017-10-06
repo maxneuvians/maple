@@ -23,6 +23,30 @@ defmodule Maple.Helpers do
   end
 
   @doc """
+  Creates a string to interpolate into the query or mutation that represents the
+  variables defined in the variables dictionary. Ex. `id: $id`
+  """
+  def declare_params(params) do
+    params
+    |> Enum.map(fn {k, _v} ->
+      "#{k}: $#{k}"
+    end)
+    |> Enum.join(", ")
+  end
+
+  @doc """
+  Declares all the variables and their types that will be used inside the specific
+  function
+  """
+  def declare_variables(params, types) do
+    params
+    |> Enum.map(fn {k, _v} ->
+      "$#{k}: #{types[Atom.to_string(k)]}!"
+    end)
+    |> Enum.join(", ")
+  end
+
+  @doc """
   Emits a log warning if the function has been marked deprecared
   """
   @spec deprecated?(boolean(), String.t, String.t) :: nil
@@ -58,14 +82,15 @@ defmodule Maple.Helpers do
           {:error, "Mutation is missing the following required params: #{Enum.join(missing, ", ")}"}
         else
           mutation = """
+            #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
             {
-              #{unquote(f[:name])}(#{Maple.Helpers.join_params(params, unquote(Macro.escape(f[:param_types])))})
+              #{unquote(f[:name])}(#{Maple.Helpers.declare_params(params)})
                 {
                   #{fields}
                 }
             }
           """
-          apply(unquote(adapter), :mutate, [mutation])
+          apply(unquote(adapter), :mutate, [mutation, params])
         end
       end
     end
@@ -82,7 +107,7 @@ defmodule Maple.Helpers do
       def unquote(f[:function_name])(fields) do
         Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
         query = "{#{unquote(f[:name])}{#{fields}}}"
-        apply(unquote(adapter), :query, [query])
+        apply(unquote(adapter), :query, [query, %{}])
       end
     end
   end
@@ -102,13 +127,14 @@ defmodule Maple.Helpers do
           {:error, "Query is missing the following required params: #{Enum.join(missing, ", ")}"}
         else
           query = """
-            {
-              #{unquote(f[:name])}
-                #{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.join_params(params, unquote(Macro.escape(f[:param_types])))})")}
-                {#{fields}}
-            }
+            #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
+              {
+                #{unquote(f[:name])}
+                  #{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_params(params)})")}
+                  {#{fields}}
+              }
           """
-          apply(unquote(adapter), :query, [query])
+          apply(unquote(adapter), :query, [query, params])
         end
       end
     end
@@ -121,7 +147,7 @@ defmodule Maple.Helpers do
   def get_param_types(args) do
     args
     |> Enum.reduce(%{}, fn arg, c ->
-      Map.put(c, arg["name"], arg["type"]["ofType"]["name"])
+      Map.put(c, arg["name"], determin_type(arg))
     end)
   end
 
@@ -136,29 +162,27 @@ defmodule Maple.Helpers do
   end
 
   @doc """
-  Joins key-value pairs of a map in the GraphQL syntax
+  Determins the type when the type is not explicitly defined.
+  Falls back on String type.
   """
-  @spec join_params(map(), map()) :: String.t
-  def join_params(params, param_types) do
-    params
-    |> Enum.map(fn {k, v} ->
-      "#{k}: #{cast_type(k, v, param_types)}"
-    end)
-    |> Enum.join(", ")
+  @spec determin_type(map()) :: String.t
+  defp determin_type(arg) do
+    cond do
+      !empty?(arg["type"]["ofType"]["name"]) ->
+        arg["type"]["ofType"]["name"]
+      !empty?(arg["type"]["name"]) ->
+        arg["type"]["name"]
+      true ->
+        "String"
+    end
   end
 
   @doc """
-  Casts a string value to its required type
+  Checks if a string is empty
   """
-  @spec cast_type(:atom, any(), map()) :: any()
-  defp cast_type(key, value, types) do
-    case types[Atom.to_string(key)] do
-      "ID" -> "\"#{value}\""
-      "String" -> "\"#{value}\""
-      nil -> "\"#{value}\""
-      _ -> value
-    end
-  end
+  @spec empty?(String.t) :: boolean()
+  defp empty?(nil), do: true
+  defp empty?(arg), do: (if String.trim(arg) == "", do: true, else: false)
 
   @doc """
   Creates a help string for a function
