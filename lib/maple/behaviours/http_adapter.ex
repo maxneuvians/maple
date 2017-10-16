@@ -1,6 +1,6 @@
-defmodule Maple.Behaviours.Adapter do
+defmodule Maple.Behaviours.HttpAdapter do
   @moduledoc """
-  Defines behaviour for an adapter to query a GraphQL server
+  Defines behaviour for a http adapter to query a GraphQL server
   """
 
   @callback mutate(any, any) :: any

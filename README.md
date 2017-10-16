@@ -58,6 +58,52 @@ Function names are changed from camel to snake case. ex `listUsers` becomes `lis
 
 Take a look at `examples/` for more examples.
 
+## Subscriptions
+
+It appears that at this point in time the support of subscriptions over web sockets are a work in progress.
+
+For example, [https://github.com/apollographql/subscriptions-transport-ws/](https://github.com/apollographql/subscriptions-transport-ws/)
+implements a legacy (`graphql-subscriptions`) and a current (`graphql-ws`) web socket subprotocol for Apollo servers. For more information please take a look here: [https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md](https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md)
+
+Maple currently supports both protocols, although you will need to specify the legacy adapter if you are using `graphql-subscriptions`. Ex.
+```
+generate_graphql_functions(websocket_adapter: :"Elixir.Maple.Clients.WebsocketApolloLegacy")
+```
+
+Once Absinthe 1.4 has been released I will implement it as an adapter. Here is an example interaction with a Scaphold.io API:
+
+```
+iex(1)> Maple.Examples.Scaphold.subscribe_to_post(%{mutations: ["createPost"]}, "mutation value {id content title}", &Maple.Examples.Scaphold.result/1)
+
+18:40:22.932 [info]  Connected!
+:ok
+18:40:23.432 [info]  Successful subscription
+
+iex(2)> Maple.Examples.Scaphold.create_post(%{input: %{title: "Hello", content: "World"}},"id")
+
+18:45:24.977 [info]  Received subscription data
+%{"data" => %{"subscribeToPost" => %{"mutation" => "createPost",
+    "value" => %{"content" => "World", "id" => "UG9zdDoxOA==",
+      "title" => "Hello"}}}}
+
+%Maple.Response{body: %{"createPost" => %{"changedPost" => %{"id" => "UG9zdDoxOA=="}}},
+status
+```
+
+## Options
+
+The module takes a Keyword list with the following options:
+
+- `:build_type_structs` - Default is `false`. If set to `true` the macro will create
+structs for all the fields found in the introspection query. All types are namespaced into
+`Maple.Types.`
+
+- `:http_adapter` - The default HTTP adapter for completing transactions against the GraphQL
+server. Default is: `:"Elixir.Maple.Clients.Http"`
+
+- `:websocket_adapter` - The default Websocket adapter for completing transactions against the GraphQL
+server using websockets. Default is: `:"Elixir.Maple.Clients.WebsocketApollo"`
+
 ## Installation
 
 ```elixir
@@ -70,7 +116,7 @@ or
 
 ```elixir
 def deps do
-  [{:maple, "~> 0.1.2"}]
+  [{:maple, "~> 0.2.0"}]
 end
 ```
 
@@ -81,20 +127,13 @@ If you only access one GraphQL API you just need to add the following to you con
 ```
 config :maple,
   api_url: "URL",
+  wss_url:, "WSS_URL", # If you are using subscriptions over websockets.
   additional_headers: %{"Authorization": "Bearer TOKEN"} # If you have any additional headers
 ```
 
 ## Ramblings
 
 This library is in development.
-
-`Maple.generate_graphql_functions` can be passed an optional adapter to resolve the GraphQL interaction.
-
-Compare `test/support/test_adapter.ex` and `lib/maple/client.ex` to see an example. This will allow you to build clients based
-on local JSON schema files. ex. `test\data\schema.json`
-
-The library can also create structs based on GraphQL types (currently commented out). The idea was to parse the result data
-through the struct for validation.
 
 Contributions and issues welcome!
 
@@ -104,7 +143,8 @@ __Also if you think this is a terrible idea, please let me know!__
 
 - [X] Refactor macro code
 - [X] Add proper documentation
-- [ ] Support subscriptions
+- [X] Support subscriptions
+- [ ] Support fragments
 - [ ] Look into validation through structs
 - [X] Expand help with required attributes
 - [X] Expand help with attribute descriptions
@@ -113,4 +153,4 @@ __Also if you think this is a terrible idea, please let me know!__
 MIT
 
 ## Version
-0.1.2
+0.2.0

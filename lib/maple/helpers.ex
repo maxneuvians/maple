@@ -140,6 +140,31 @@ defmodule Maple.Helpers do
     end
   end
 
+  @spec generate_subscription(map(), atom()) :: tuple()
+  def generate_subscription(function, adapter) do
+    quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
+      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 2}, [:params, :fields], f[:description])
+      def unquote(f[:function_name])(params, fields, callback) do
+        missing = Maple.Helpers.find_missing(params, unquote(f[:required_params]))
+        Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
+        if missing != [] do
+          {:error, "Subscription is missing the following required params: #{Enum.join(missing, ", ")}"}
+        else
+          subscription = """
+            subscription #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
+            {
+              #{unquote(f[:name])}(#{Maple.Helpers.declare_params(params)})
+                {
+                  #{fields}
+                }
+            }
+          """
+          apply(unquote(adapter), :start_link, [subscription, params, callback])
+        end
+      end
+    end
+  end
+
   @doc """
   Returns a map of the GraphQL declared types for the arguments
   """
@@ -147,7 +172,7 @@ defmodule Maple.Helpers do
   def get_param_types(args) do
     args
     |> Enum.reduce(%{}, fn arg, c ->
-      Map.put(c, arg["name"], determin_type(arg))
+      Map.put(c, arg["name"], determin_type(arg["type"]))
     end)
   end
 
@@ -166,14 +191,16 @@ defmodule Maple.Helpers do
   Falls back on String type.
   """
   @spec determin_type(map()) :: String.t
-  defp determin_type(arg) do
+  defp determin_type(type) do
     cond do
-      !empty?(arg["type"]["ofType"]["name"]) ->
-        arg["type"]["ofType"]["name"]
-      !empty?(arg["type"]["name"]) ->
-        arg["type"]["name"]
-      true ->
-        "String"
+      empty?(type["ofType"])
+        -> type["name"]
+      type["kind"] == "LIST"
+        -> "[#{determin_type(type["ofType"])}]"
+      Map.has_key?(type["ofType"], "ofType")
+        -> determin_type(type["ofType"])
+      true
+        -> "String"
     end
   end
 
@@ -182,7 +209,7 @@ defmodule Maple.Helpers do
   """
   @spec empty?(String.t) :: boolean()
   defp empty?(nil), do: true
-  defp empty?(arg), do: (if String.trim(arg) == "", do: true, else: false)
+  defp empty?(_), do: false
 
   @doc """
   Creates a help string for a function

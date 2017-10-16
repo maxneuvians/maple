@@ -118,6 +118,25 @@ defmodule MapleTest.Maple.HelpersTest do
     assert Helpers.get_param_types(data) == %{"id" => "ID"}
   end
 
+  test "get_param_types/1 returns a map of params with their GraphQL types when there is a list" do
+    data = [%{
+      "defaultValue" => nil,
+      "description" => nil,
+      "name" => "id",
+      "type" =>
+        %{
+          "kind" => "LIST",
+          "name" => nil,
+          "ofType" => %{
+            "kind" => "INPUT_OBJECT",
+            "name" => "RoleOrderByArgs",
+            "ofType" => nil
+          }
+        }
+    }]
+    assert Helpers.get_param_types(data) == %{"id" => "[RoleOrderByArgs]"}
+  end
+
   test "get_required_params/1 returns a list of keys for required params" do
     data = [%{
       "defaultValue" => nil,

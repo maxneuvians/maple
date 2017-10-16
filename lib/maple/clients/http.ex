@@ -1,10 +1,12 @@
-defmodule Maple.Client do
+defmodule Maple.Clients.Http do
   @moduledoc """
   Implements an adapter to resolve the GraphQL mutations and queries against a
-  remote server using the Tesla HTTP client. Ideally, you could write your own
-  adapter as long as it conforms to the `Maple.Behaviours.Adapter` behaviour.
+  remote server using the Tesla HTTP client.
+
+  You could write your own adapter as long as it conforms to the
+  `Maple.Behaviours.HttpAdapter` behaviour.
   """
-  @behaviour Maple.Behaviours.Adapter
+  @behaviour Maple.Behaviours.HttpAdapter
 
   @doc """
   Takes a GraphQL mutation string and a map of parameters

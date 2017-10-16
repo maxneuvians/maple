@@ -3,7 +3,7 @@ defmodule Maple.Mixfile do
 
   def project do
     [app: :maple,
-     version: "0.1.2",
+     version: "0.2.0",
      source_url: "https://github.com/maxneuvians/maple",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
@@ -32,7 +32,9 @@ defmodule Maple.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:poison, "~> 3.1"},
-      {:tesla, "~> 0.8.0"}
+      {:tesla, "~> 0.8.0"},
+      {:uuid, "~> 1.1"},
+      {:websockex, git: "https://github.com/Azolo/websockex", ref: "4b6afa3b8aaf91d0f11ab0ffa0f8a67e43386134"}
     ]
   end
 

@@ -1,7 +1,9 @@
-defmodule Maple.TestAdapter do
+defmodule Maple.HttpTestAdapter do
+
+  @behaviour Maple.Behaviours.HttpAdapter
 
   def mutate(string, %{}) do
-    string
+    Maple.WebsocketTestAdapter.trigger_callback("Some result")
   end
 
   def query("{listWidgets{id}}", %{}) do
