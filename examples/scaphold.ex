@@ -1,6 +1,6 @@
 defmodule Maple.Examples.Scaphold.Config do
   Application.put_env(:maple, :api_url, "https://us-west-2.api.scaphold.io/graphql/maple")
-  Application.put_env(:maple, :wss_url, "wss://us-west-2.api.scaphold.io/graphql/maple?Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJraW5kIjoic2NhcGhvbGQuc3VwZXJ1c2VyIiwiZXhwIjo4NjQwMDAwMDAwMDAwMDAwLCJpYXQiOjE1MDgxMDc0NzUsImF1ZCI6Ikp0Z2Z5WklRMnBKajlySThFOWU2MTdoUWNrMFJueEFuIiwiaXNzIjoiaHR0cHM6Ly9zY2FwaG9sZC5hdXRoMC5jb20vIiwic3ViIjoiZTI0MDdiOWItM2NiZi00MGZhLTliN2QtY2YyY2EwMDY4YTYyIn0.s_uMWwk6AWiNMzvHd6DtIumju2jRK0wdlh0c56v82_w")
+  Application.put_env(:maple, :wss_url, "wss://us-west-2.api.scaphold.io/graphql/maple?Authorization=YOUR_JWT_TOKEN")
 end
 
 defmodule Maple.Examples.Scaphold do

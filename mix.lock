@@ -17,4 +17,4 @@
   "tesla": {:hex, :tesla, "0.8.0", "7ab982acda2d049b3810065b22a86602223dc191e612dd129ed4feeefce7993a", [:mix], [{:exjsx, ">= 0.1.0", [hex: :exjsx, optional: true]}, {:fuse, "~> 2.4", [hex: :fuse, optional: true]}, {:hackney, "~> 1.6", [hex: :hackney, optional: true]}, {:ibrowse, "~> 4.2", [hex: :ibrowse, optional: true]}, {:mime, "~> 1.0", [hex: :mime, optional: false]}, {:poison, ">= 1.0.0", [hex: :poison, optional: true]}]},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.3.1", "a1f612a7b512638634a603c8f401892afbf99b8ce93a45041f8aaca99cadb85e", [:rebar3], []},
   "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], []},
-  "websockex": {:git, "https://github.com/Azolo/websockex", "4b6afa3b8aaf91d0f11ab0ffa0f8a67e43386134", [ref: "4b6afa3b8aaf91d0f11ab0ffa0f8a67e43386134"]}}
+  "websockex": {:hex, :websockex, "0.4.0", "72096b1257baffc52c5f15c7366fb468e373b3c6173a6fee45311bfdb8ee1256", [:mix], []}}

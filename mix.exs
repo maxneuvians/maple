@@ -34,7 +34,7 @@ defmodule Maple.Mixfile do
       {:poison, "~> 3.1"},
       {:tesla, "~> 0.8.0"},
       {:uuid, "~> 1.1"},
-      {:websockex, git: "https://github.com/Azolo/websockex", ref: "4b6afa3b8aaf91d0f11ab0ffa0f8a67e43386134"}
+      {:websockex, "~> 0.4"}
     ]
   end
 
