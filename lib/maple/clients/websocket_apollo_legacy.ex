@@ -26,6 +26,7 @@ defmodule Maple.Clients.WebsocketApolloLegacy do
   Starts the websocket connection, registers the callback in the state,
   completes the initial handshacke and sends the subscription request.
   """
+  @spec start_link(String.t, map(), function) :: atom()
   def start_link(query, params, callback) do
     id =
       UUID.uuid4
@@ -50,6 +51,7 @@ defmodule Maple.Clients.WebsocketApolloLegacy do
   @doc """
   Callback after websocket connects
   """
+  @spec handle_connect(%WebSockex.Conn{}, map()) :: {:ok, map()}
   def handle_connect(_conn, state) do
     Logger.info("Connected!")
     {:ok, state}
@@ -58,6 +60,7 @@ defmodule Maple.Clients.WebsocketApolloLegacy do
   @doc """
   Callback after incoming data
   """
+  @spec handle_frame({:text, String.t}, map()) :: {:ok, map()}
   def handle_frame({:text, msg}, state) do
     decoded_msg = Poison.decode!(msg)
     case decoded_msg do
@@ -80,8 +83,10 @@ defmodule Maple.Clients.WebsocketApolloLegacy do
     {:ok, state}
   end
 
+  @spec send_msg(atom(), map()) :: :ok
   def send_msg(id, msg), do: WebSockex.send_frame(id, {:text, Poison.encode!(msg)})
 
+  @spec headers() :: list()
   defp headers() do
     if Application.get_env(:maple, :additional_headers) do
       [{"Sec-WebSocket-Protocol", "graphql-ws"}, {"User-Agent", "Maple GraphQL Client"}]
@@ -91,8 +96,10 @@ defmodule Maple.Clients.WebsocketApolloLegacy do
     end
   end
 
+  @spec send_init(atom()) :: any()
   defp send_init(id), do: send_msg(id, %{type: @gql_connection_init})
 
+  @spec start_subscription(map()) :: :ok
   defp start_subscription(state) do
      msg = %{
        type: @gql_start,
