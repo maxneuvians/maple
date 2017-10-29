@@ -31,7 +31,7 @@ defmodule Maple.Clients.WebsocketApollo do
   Starts the websocket connection, registers the callback in the state,
   completes the initial handshacke and sends the subscription request.
   """
-  @spec start_link(String.t, map(), function) :: :atom
+  @spec start_link(String.t, map(), function) :: atom()
   def start_link(query, params, callback) do
     id =
       UUID.uuid4
@@ -87,7 +87,7 @@ defmodule Maple.Clients.WebsocketApollo do
     {:ok, state}
   end
 
-  @spec send_msg(String.t, map()) :: :ok
+  @spec send_msg(atom(), map()) :: :ok
   defp send_msg(id, msg), do: WebSockex.send_frame(id, {:text, Poison.encode!(msg)})
 
   @spec headers() :: list()
@@ -100,7 +100,7 @@ defmodule Maple.Clients.WebsocketApollo do
     end
   end
 
-  @spec send_init(String.t) :: any()
+  @spec send_init(atom()) :: any()
   defp send_init(id), do: send_msg(id, %{type: @gql_connection_init})
 
   @spec start_subscription(map()) :: :ok

@@ -26,6 +26,7 @@ defmodule Maple.Helpers do
   Creates a string to interpolate into the query or mutation that represents the
   variables defined in the variables dictionary. Ex. `id: $id`
   """
+  @spec declare_params(map()) :: String.t
   def declare_params(params) do
     params
     |> Enum.map(fn {k, _v} ->
@@ -38,6 +39,7 @@ defmodule Maple.Helpers do
   Declares all the variables and their types that will be used inside the specific
   function
   """
+  @spec declare_variables(map(), map()) :: String.t
   def declare_variables(params, types) do
     params
     |> Enum.map(fn {k, _v} ->
