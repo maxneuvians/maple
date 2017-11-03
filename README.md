@@ -133,6 +133,9 @@ If you only access one GraphQL API you just need to add the following to you con
 
 ```
 config :maple,
+  build_type_structs: false,
+  http_adapter: Maple.Clients.Http,
+  websocket_adapter: Maple.Clients.WebsocketApollo,
   api_url: "URL",
   wss_url:, "WSS_URL", # If you are using subscriptions over websockets.
   additional_headers: %{"Authorization": "Bearer TOKEN"} # If you have any additional headers
@@ -160,4 +163,4 @@ __Also if you think this is a terrible idea, please let me know!__
 MIT
 
 ## Version
-0.2.0
+0.3.0
