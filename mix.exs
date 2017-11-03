@@ -3,7 +3,7 @@ defmodule Maple.Mixfile do
 
   def project do
     [app: :maple,
-     version: "0.2.0",
+     version: "0.3.0",
      source_url: "https://github.com/maxneuvians/maple",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,

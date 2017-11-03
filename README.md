@@ -92,17 +92,24 @@ status
 
 ## Options
 
-The module takes a Keyword list with the following options:
+The module takes a options from the configuration:
+
+```
+config :maple,
+  build_type_structs: false,
+  http_adapter: Maple.Clients.Http,
+  websocket_adapter: Maple.Clients.WebsocketApollo
+```
 
 - `:build_type_structs` - Default is `false`. If set to `true` the macro will create
 structs for all the fields found in the introspection query. All types are namespaced into
 `Maple.Types.`
 
 - `:http_adapter` - The default HTTP adapter for completing transactions against the GraphQL
-server. Default is: `:"Elixir.Maple.Clients.Http"`
+server. Default is: `Maple.Clients.Http`
 
 - `:websocket_adapter` - The default Websocket adapter for completing transactions against the GraphQL
-server using websockets. Default is: `:"Elixir.Maple.Clients.WebsocketApollo"`
+server using websockets. Default is: `Maple.Clients.WebsocketApollo`
 
 ## Installation
 
@@ -116,7 +123,7 @@ or
 
 ```elixir
 def deps do
-  [{:maple, "~> 0.2.0"}]
+  [{:maple, "~> 0.3.0"}]
 end
 ```
 

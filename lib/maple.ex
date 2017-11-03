@@ -4,24 +4,25 @@ defmodule Maple do
   easy to use client code functions at compile time with which a user can execute queries and
   mutations on a GraphQL endpoint.
 
-  The module takes a Keyword list with the following options:
+  The module takes options from the configuration:
+
+  ```
+  config :maple,
+    build_type_structs: false,
+    http_adapter: Maple.Clients.Http,
+    websocket_adapter: Maple.Clients.WebsocketApollo
+  ```
 
   - `:build_type_structs` - Default is `false`. If set to `true` the macro will create
   structs for all the fields found in the introspection query. All types are namespaced into
   `Maple.Types.`
 
   - `:http_adapter` - The default HTTP adapter for completing transactions against the GraphQL
-  server. Default is: `:"Elixir.Maple.Clients.Http"`
+  server. Default is: `Maple.Clients.Http`
 
   - `:websocket_adapter` - The default Websocket adapter for completing transactions against the GraphQL
-  server using websockets. Default is: `:"Elixir.Maple.Clients.WebsocketApollo"`
+  server using websockets. Default is: `Maple.Clients.WebsocketApollo`
   """
-
-  @default_options [
-    build_type_structs: false,
-    http_adapter: :"Elixir.Maple.Clients.Http",
-    websocket_adapter: :"Elixir.Maple.Clients.WebsocketApollo"
-  ]
 
   @known_types ~w(
     __Directive
@@ -46,9 +47,13 @@ defmodule Maple do
     end
   end
 
-  defmacro generate_graphql_functions(options \\ []) do
+  defmacro generate_graphql_functions() do
 
-    options = Keyword.merge(@default_options, options)
+    options = [
+      build_type_structs: Application.get_env(:maple, :build_type_structs, false),
+      http_adapter:  Application.get_env(:maple, :http_adapter, Maple.Clients.Http),
+      websocket_adapter: Application.get_env(:maple, :websocket_adapter, Maple.Clients.WebsocketApollo)
+    ]
 
     schema =
       options[:http_adapter]

@@ -1,6 +1,7 @@
 defmodule Maple.Examples.Scaphold.Config do
   Application.put_env(:maple, :api_url, "https://us-west-2.api.scaphold.io/graphql/maple")
   Application.put_env(:maple, :wss_url, "wss://us-west-2.api.scaphold.io/graphql/maple?Authorization=YOUR_JWT_TOKEN")
+  Application.put_env::maple, :websocket_adapter, Maple.Clients.WebsocketApolloLegacy)
 end
 
 defmodule Maple.Examples.Scaphold do
@@ -32,7 +33,7 @@ defmodule Maple.Examples.Scaphold do
   """
 
   use Maple
-  generate_graphql_functions(websocket_adapter: :"Elixir.Maple.Clients.WebsocketApolloLegacy")
+  generate_graphql_functions()
 
   def result(data), do: IO.inspect data
 end
