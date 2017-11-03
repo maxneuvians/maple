@@ -72,7 +72,7 @@ generate_graphql_functions(websocket_adapter: :"Elixir.Maple.Clients.WebsocketAp
 
 Once Absinthe 1.4 has been released I will implement it as an adapter. Here is an example interaction with a Scaphold.io API:
 
-```
+```elixir
 iex(1)> Maple.Examples.Scaphold.subscribe_to_post(%{mutations: ["createPost"]}, "mutation value {id content title}", &Maple.Examples.Scaphold.result/1)
 
 18:40:22.932 [info]  Connected!
@@ -94,7 +94,7 @@ status
 
 The module takes a options from the configuration:
 
-```
+```elixir
 config :maple,
   build_type_structs: false,
   http_adapter: Maple.Clients.Http,
@@ -131,7 +131,7 @@ end
 
 If you only access one GraphQL API you just need to add the following to you config.exs
 
-```
+```elixir
 config :maple,
   build_type_structs: false,
   http_adapter: Maple.Clients.Http,
@@ -156,6 +156,7 @@ __Also if you think this is a terrible idea, please let me know!__
 - [X] Support subscriptions
 - [ ] Support fragments
 - [ ] Look into validation through structs
+- [ ] Alternative syntax for fields
 - [X] Expand help with required attributes
 - [X] Expand help with attribute descriptions
 
