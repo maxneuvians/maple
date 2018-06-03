@@ -28,7 +28,6 @@ defmodule MapleTest do
   end
 
   test "allows for a callback to a subscription" do
-
     assert capture_log(fn ->
       MapleTest.Client.subscribe_to_widget(%{filter: "bar"}, "id", &Logger.info/1 )
       MapleTest.Client.create_widget(%{id: "foo", name: "bar"}, "id")

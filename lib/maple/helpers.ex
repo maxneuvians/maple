@@ -76,8 +76,8 @@ defmodule Maple.Helpers do
   @spec generate_mutation(map(), atom()) :: tuple()
   def generate_mutation(function, adapter) do
     quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 2}, [:params, :fields], f[:description])
-      def unquote(f[:function_name])(params, fields) do
+      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 3}, [:params, :fields, :options], f[:description])
+      def unquote(f[:function_name])(params, fields, options \\ []) do
         missing = Maple.Helpers.find_missing(params, unquote(f[:required_params]))
         Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
         if missing != [] do
@@ -92,24 +92,8 @@ defmodule Maple.Helpers do
                 }
             }
           """
-          apply(unquote(adapter), :mutate, [mutation, params])
+          apply(unquote(adapter), :mutate, [mutation, params, options])
         end
-      end
-    end
-  end
-
-  @doc """
-  Takes the data for a query function and an adapter and creates the AST that calls
-  the query function on the passed adapter with the passed fields
-  """
-  @spec generate_one_arity_query(map(), atom()) :: tuple()
-  def generate_one_arity_query(function, adapter) do
-    quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 1}, [:fields], f[:description])
-      def unquote(f[:function_name])(fields) do
-        Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
-        query = "{#{unquote(f[:name])}{#{fields}}}"
-        apply(unquote(adapter), :query, [query, %{}])
       end
     end
   end
@@ -121,22 +105,30 @@ defmodule Maple.Helpers do
   @spec generate_two_arity_query(map(), atom()) :: tuple()
   def generate_two_arity_query(function, adapter) do
     quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
-      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 2}, [:params, :fields], f[:description])
-      def unquote(f[:function_name])(params, fields) do
-        missing = Maple.Helpers.find_missing(params, unquote(f[:required_params]))
-        Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:eprecated_reason]))
-        if missing != [] do
-          {:error, "Query is missing the following required params: #{Enum.join(missing, ", ")}"}
+      Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 3}, [:params, :fields, :options], f[:description])
+      def unquote(f[:function_name])(params_or_fields, fields \\ "", options \\ []) do
+        if is_map(params_or_fields) do
+          params = params_or_fields
+          missing = Maple.Helpers.find_missing(params, unquote(f[:required_params]))
+          Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:eprecated_reason]))
+          if missing != [] do
+            {:error, "Query is missing the following required params: #{Enum.join(missing, ", ")}"}
+          else
+            query = """
+              #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
+                {
+                  #{unquote(f[:name])}
+                    #{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_params(params)})")}
+                    {#{fields}}
+                }
+            """
+            apply(unquote(adapter), :query, [query, params, options])
+          end
         else
-          query = """
-            #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
-              {
-                #{unquote(f[:name])}
-                  #{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_params(params)})")}
-                  {#{fields}}
-              }
-          """
-          apply(unquote(adapter), :query, [query, params])
+          fields = params_or_fields
+          Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
+          query = "{#{unquote(f[:name])}{#{fields}}}"
+          apply(unquote(adapter), :query, [query, %{}, options])
         end
       end
     end

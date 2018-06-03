@@ -77,16 +77,8 @@ defmodule Maple do
           acc ++
             Enum.map(type["fields"], fn func ->
               function = Helpers.assign_function_params(func)
-              # Check if we can create a query function with /1 when there are no required params
-              if length(function[:required_params]) == 0 do
-                [
-                  Helpers.generate_one_arity_query(function, options[:http_adapter]),
-                  Helpers.generate_two_arity_query(function, options[:http_adapter])
-                ]
-              else
-                [Helpers.generate_two_arity_query(function, options[:http_adapter])]
-              end
-          end)
+              [Helpers.generate_two_arity_query(function, options[:http_adapter])]
+            end)
 
         type["name"] == subscription_type_name ->
 

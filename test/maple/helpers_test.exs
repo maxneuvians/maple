@@ -73,19 +73,6 @@ defmodule MapleTest.Maple.HelpersTest do
     assert is_tuple(Helpers.generate_mutation(function, :adapter))
   end
 
-  test "generate_one_arity_query/2 returns a tuple with an AST for a passed function" do
-    function = %{
-      deprecated: false,
-      deprecated_reason: nil,
-      description: "Lists widgets",
-      function_name: :list_widgets,
-      name: "listWidgets",
-      param_types: %{},
-      required_params: []
-    }
-    assert is_tuple(Helpers.generate_one_arity_query(function, :adapter))
-  end
-
   test "generate_two_arity_query/2 returns a tuple with an AST for a passed function" do
     function = %{
       deprecated: false,

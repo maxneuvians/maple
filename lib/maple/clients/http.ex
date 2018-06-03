@@ -12,18 +12,18 @@ defmodule Maple.Clients.Http do
   Takes a GraphQL mutation string and a map of parameters
   and executes it against a remove server
   """
-  @spec mutate(String.t, map()) :: %Maple.Response{}
-  def mutate(string, params) do
-    execute("mutation " <> string, params)
+  @spec mutate(String.t, map(), list()) :: %Maple.Response{}
+  def mutate(string, params, options) do
+    execute("mutation " <> string, params, options)
   end
 
   @doc """
   Takes a GraphQL query string and a map of parameters
   and executes it against a remove server
   """
-  @spec query(String.t, map()) :: %Maple.Response{}
-  def query(string, params) do
-    execute("query " <> string, params)
+  @spec query(String.t, map(), list()) :: %Maple.Response{}
+  def query(string, params, options) do
+    execute("query " <> string, params, options)
   end
 
   @doc """
@@ -33,15 +33,15 @@ defmodule Maple.Clients.Http do
   @spec schema() :: map()
   def schema() do
     "query IntrospectionQuery {__schema {queryType {name} mutationType {name} subscriptionType {name} types {...FullType} directives {name description locations args {...InputValue}}}} fragment FullType on __Type {kind name description fields(includeDeprecated: true) {name description args {...InputValue} type {...TypeRef} isDeprecated deprecationReason} inputFields {...InputValue} interfaces {...TypeRef} enumValues(includeDeprecated: true) {name description isDeprecated deprecationReason} possibleTypes {...TypeRef}} fragment InputValue on __InputValue {name description type {...TypeRef} defaultValue} fragment TypeRef on __Type {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name}}}}}}}}"
-    |> execute()
+    |> execute(%{}, [])
     |> Map.get(:body)
   end
 
   @doc """
   Executes the GraphQL command against a remote server
   """
-  @spec execute(String.t) :: %Maple.Response{}
-  defp execute(string, params \\ %{}) do
+  @spec execute(String.t, map(), list()) :: %Maple.Response{}
+  defp execute(string, params, options) do
     query =
       %{
         query: string,
