@@ -18,7 +18,5 @@ defmodule Maple.Examples.Pokemon do
       %{"name" => "Venusaur"}]}}, status: 200}
   ```
   """
-
   use Maple
-  generate_graphql_functions()
 end

@@ -19,5 +19,4 @@ defmodule Maple.Examples.Github do
   """
 
   use Maple
-  generate_graphql_functions()
 end

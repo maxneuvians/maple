@@ -42,12 +42,6 @@ defmodule Maple do
   alias Maple.Helpers
 
   defmacro __using__(_vars) do
-    quote do
-      import Maple
-    end
-  end
-
-  defmacro generate_graphql_functions() do
 
     options = [
       build_type_structs: Application.get_env(:maple, :build_type_structs, false),

@@ -18,5 +18,4 @@ defmodule Maple.Examples.Shopify do
   ```
   """
   use Maple
-  generate_graphql_functions()
 end

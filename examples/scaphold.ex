@@ -33,7 +33,6 @@ defmodule Maple.Examples.Scaphold do
   """
 
   use Maple
-  generate_graphql_functions()
 
   def result(data), do: IO.inspect data
 end

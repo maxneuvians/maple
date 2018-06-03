@@ -16,11 +16,10 @@ end
 
 defmodule Maple.Examples.Github do
   use Maple
-  generate_graphql_functions()
 end
 ```
 
-`generate_graphql_functions` will create all the query and mutation functions for the GitHub GraphQL API.
+`` will create all the query and mutation functions for the GitHub GraphQL API.
 
 So you can do the following:
 
@@ -64,11 +63,6 @@ It appears that at this point in time the support of subscriptions over web sock
 
 For example, [https://github.com/apollographql/subscriptions-transport-ws/](https://github.com/apollographql/subscriptions-transport-ws/)
 implements a legacy (`graphql-subscriptions`) and a current (`graphql-ws`) web socket subprotocol for Apollo servers. For more information please take a look here: [https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md](https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md)
-
-Maple currently supports both protocols, although you will need to specify the legacy adapter if you are using `graphql-subscriptions`. Ex.
-```
-generate_graphql_functions(websocket_adapter: :"Elixir.Maple.Clients.WebsocketApolloLegacy")
-```
 
 Once Absinthe 1.4 has been released I will implement it as an adapter. Here is an example interaction with a Scaphold.io API:
 
