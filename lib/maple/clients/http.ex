@@ -48,9 +48,14 @@ defmodule Maple.Clients.Http do
         variables: params
       }
       |> Poison.encode!
+    
+    additional_headers = Keyword.get(options, :headers, %{})
+    if Application.get_env(:maple, :additional_headers)  do
+      additional_headers = Map.merge(Application.get_env(:maple, :additional_headers), additional_headers) 
+    end
 
     Application.get_env(:maple, :api_url)
-    |> Tesla.post(query, headers: headers())
+    |> Tesla.post(query, headers: headers(additional_headers))
     |> Maple.Response.parse
   end
 
@@ -59,12 +64,8 @@ defmodule Maple.Clients.Http do
   additional headers defined by the `:additional_headers`
   configuration option
   """
-  @spec headers() :: map()
-  defp headers() do
-    if Application.get_env(:maple, :additional_headers)  do
-      Map.merge(%{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}, Application.get_env(:maple, :additional_headers))
-    else
-      %{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}
-    end
+  @spec headers(list()) :: map()
+  defp headers(additional_headers) do
+    Map.merge(%{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}, additional_headers)
   end
 end

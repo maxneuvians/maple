@@ -12,6 +12,7 @@ defmodule MapleTest do
   test "creates query functions with non-mandetory params" do
     assert :erlang.function_exported(MapleTest.Client, :list_widgets, 1)
     assert :erlang.function_exported(MapleTest.Client, :list_widgets, 2)
+    assert :erlang.function_exported(MapleTest.Client, :list_widgets, 3)
   end
 
   test "creates query functions with mandatory params" do
@@ -21,6 +22,7 @@ defmodule MapleTest do
 
   test "creates mutation functions" do
     assert :erlang.function_exported(MapleTest.Client, :create_widget, 2)
+    assert :erlang.function_exported(MapleTest.Client, :create_widget, 3)
   end
 
   test "creates subscription functions" do
@@ -36,6 +38,11 @@ defmodule MapleTest do
 
   test "parses the result of a query" do
     assert MapleTest.Client.list_widgets("id") == %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]}
+  end
+
+  test "allows for the passing of options" do
+    assert MapleTest.Client.list_widgets("id", [headers: %{foo: :bar}]) == %{foo: :bar}
+    assert MapleTest.Client.list_widgets(%{}, "id", [headers: %{foo: :bar}]) == %{foo: :bar}
   end
 
   test "logs a warning if function is deprecated" do

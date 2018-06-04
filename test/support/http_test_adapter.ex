@@ -2,15 +2,19 @@ defmodule Maple.HttpTestAdapter do
 
   @behaviour Maple.Behaviours.HttpAdapter
 
-  def mutate(string, %{}, options) do
+  def mutate(_string, %{}, _options) do
     Maple.WebsocketTestAdapter.trigger_callback("Some result")
   end
 
-  def query("{listWidgets{id}}", %{}, options) do
+  def query(_params, _fields, [headers: headers]) do
+    headers
+  end
+
+  def query("{listWidgets{id}}", %{}, _options) do
     %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]}
   end
 
-  def query(string, %{}, options) do
+  def query(string, %{}, _options) do
     string
   end
 

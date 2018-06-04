@@ -106,9 +106,10 @@ defmodule Maple.Helpers do
   def generate_two_arity_query(function, adapter) do
     quote bind_quoted: [adapter: adapter, f: Macro.escape(function)] do
       Module.add_doc(__MODULE__, 1, :def, {f[:function_name], 3}, [:params, :fields, :options], f[:description])
-      def unquote(f[:function_name])(params_or_fields, fields \\ "", options \\ []) do
+      def unquote(f[:function_name])(params_or_fields, fields_or_options \\ [], options \\ []) do
         if is_map(params_or_fields) do
           params = params_or_fields
+          fields = fields_or_options
           missing = Maple.Helpers.find_missing(params, unquote(f[:required_params]))
           Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:eprecated_reason]))
           if missing != [] do
@@ -126,6 +127,7 @@ defmodule Maple.Helpers do
           end
         else
           fields = params_or_fields
+          options = fields_or_options
           Maple.Helpers.deprecated?(unquote(f[:deprecated]), unquote(f[:name]), unquote(f[:deprecated_reason]))
           query = "{#{unquote(f[:name])}{#{fields}}}"
           apply(unquote(adapter), :query, [query, %{}, options])
