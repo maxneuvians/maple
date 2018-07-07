@@ -91,7 +91,8 @@ defmodule Maple.Helpers do
                 }
             }
           """
-          mutation
+          mutation =
+            mutation
             |> String.replace("\n", "")
             |> String.replace(" ", "")
           apply(unquote(adapter), :mutate, [mutation, params, options])
@@ -160,9 +161,9 @@ defmodule Maple.Helpers do
             }
           """
           subscription =
-              subscription
-              |> String.replace("\n", "")
-              |> String.replace(" ", "")
+            subscription
+            |> String.replace("\n", "")
+            |> String.replace(" ", "")
           apply(unquote(adapter), :start_link, [subscription, params, callback])
         end
       end
