@@ -92,6 +92,9 @@ defmodule Maple.Helpers do
                 }
             }
           """
+          mutation
+            |> String.replace("\n", "")
+            |> String.replace(" ", "")
           apply(unquote(adapter), :mutate, [mutation, params, options])
         end
       end
@@ -123,6 +126,10 @@ defmodule Maple.Helpers do
                     {#{fields}}
                 }
             """
+            query =
+              query
+              |> String.replace("\n", "")
+              |> String.replace(" ", "")
             apply(unquote(adapter), :query, [query, params, options])
           end
         else
@@ -155,6 +162,10 @@ defmodule Maple.Helpers do
                 }
             }
           """
+          subscription =
+              subscription
+              |> String.replace("\n", "")
+              |> String.replace(" ", "")
           apply(unquote(adapter), :start_link, [subscription, params, callback])
         end
       end
