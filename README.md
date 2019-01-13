@@ -2,6 +2,7 @@
 
 [![Master](https://travis-ci.org/maxneuvians/maple.svg?branch=master)](https://travis-ci.org/maxneuvians/maple)
 
+WARNING: This release is just for posterity. There is a major rewrite coming.
 
 Maple is an automatic, compile time, client code generator for GraphQL schemas. At best it creates easy to use
 API functions for use in your code. At worst it can be used as a CLI for a GraphQL API.
@@ -117,7 +118,7 @@ or
 
 ```elixir
 def deps do
-  [{:maple, "~> 0.3.0"}]
+  [{:maple, "~> 0.4.0"}]
 end
 ```
 
@@ -158,4 +159,4 @@ __Also if you think this is a terrible idea, please let me know!__
 MIT
 
 ## Version
-0.3.0
+0.4.0
