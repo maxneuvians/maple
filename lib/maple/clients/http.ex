@@ -8,6 +8,8 @@ defmodule Maple.Clients.Http do
   """
   @behaviour Maple.Behaviours.HttpAdapter
 
+  HTTPoison.start()
+
   @doc """
   Takes a GraphQL mutation string and a map of parameters
   and executes it against a remove server
