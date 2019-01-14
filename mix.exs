@@ -3,9 +3,9 @@ defmodule Maple.Mixfile do
 
   def project do
     [app: :maple,
-     version: "0.4.0",
+     version: "0.5.0",
      source_url: "https://github.com/maxneuvians/maple",
-     elixir: "~> 1.4",
+     elixir: "~> 1.7",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      description: description(),
@@ -31,8 +31,8 @@ defmodule Maple.Mixfile do
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:httpoison, "~> 1.4"},
       {:poison, "~> 3.1"},
-      {:tesla, "~> 0.8.0"},
       {:uuid, "~> 1.1"},
       {:websockex, "~> 0.4"}
     ]

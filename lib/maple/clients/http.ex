@@ -1,7 +1,7 @@
 defmodule Maple.Clients.Http do
   @moduledoc """
   Implements an adapter to resolve the GraphQL mutations and queries against a
-  remote server using the Tesla HTTP client.
+  remote server using the HTTPoison HTTP client.
 
   You could write your own adapter as long as it conforms to the
   `Maple.Behaviours.HttpAdapter` behaviour.
@@ -32,7 +32,7 @@ defmodule Maple.Clients.Http do
   """
   @spec schema() :: map()
   def schema() do
-    "query IntrospectionQuery {__schema {queryType {name} mutationType {name} subscriptionType {name} types {...FullType} directives {name description locations args {...InputValue}}}} fragment FullType on __Type {kind name description fields(includeDeprecated: true) {name description args {...InputValue} type {...TypeRef} isDeprecated deprecationReason} inputFields {...InputValue} interfaces {...TypeRef} enumValues(includeDeprecated: true) {name description isDeprecated deprecationReason} possibleTypes {...TypeRef}} fragment InputValue on __InputValue {name description type {...TypeRef} defaultValue} fragment TypeRef on __Type {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name ofType {kind name}}}}}}}}"
+    Maple.Constants.introspection_query()
     |> execute(%{}, [])
     |> Map.get(:body)
   end
@@ -48,14 +48,13 @@ defmodule Maple.Clients.Http do
         variables: params
       }
       |> Poison.encode!
-    
-    additional_headers = Keyword.get(options, :headers, %{})
+    additional_headers = Keyword.get(options, :headers, [])
     if Application.get_env(:maple, :additional_headers)  do
-      additional_headers = Map.merge(Application.get_env(:maple, :additional_headers), additional_headers) 
+      additional_headers = Keyword.merge(Application.get_env(:maple, :additional_headers), additional_headers)
     end
 
     Application.get_env(:maple, :api_url)
-    |> Tesla.post(query, headers: headers(additional_headers))
+    |> HTTPoison.post!(query, headers(additional_headers))
     |> Maple.Response.parse
   end
 
@@ -64,8 +63,8 @@ defmodule Maple.Clients.Http do
   additional headers defined by the `:additional_headers`
   configuration option
   """
-  @spec headers(list()) :: map()
+  @spec headers(list()) :: list()
   defp headers(additional_headers) do
-    Map.merge(%{"Content-Type" =>"application/json", "User-Agent" =>"Maple GraphQL Client"}, additional_headers)
+    Keyword.merge([{"Content-Type", "application/json"}, {"User-Agent", "Maple GraphQL Client"}], additional_headers)
   end
 end

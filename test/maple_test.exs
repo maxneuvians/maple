@@ -20,9 +20,25 @@ defmodule MapleTest do
     assert MapleTest.Client.widget(%{}, "") == {:error, "Query is missing the following required params: id"}
   end
 
+  test "creates a query function that identifies its function type" do
+    assert MapleTest.Client.widget(:function_type) == :query
+  end
+
+  test "creates a query function that identifies its type" do
+    assert MapleTest.Client.widget(:type) == %Maple.Types.Widget{email: nil, id: nil, name: nil}
+  end
+
   test "creates mutation functions" do
     assert :erlang.function_exported(MapleTest.Client, :create_widget, 2)
     assert :erlang.function_exported(MapleTest.Client, :create_widget, 3)
+  end
+
+  test "creates a mutation function that identifies its function type" do
+    assert MapleTest.Client.create_widget(:function_type) == :mutation
+  end
+
+  test "creates a mutation function that identifies its type" do
+    assert MapleTest.Client.create_widget(:type) == %Maple.Types.Widget{email: nil, id: nil, name: nil}
   end
 
   test "creates subscription functions" do
@@ -36,8 +52,10 @@ defmodule MapleTest do
     end) =~ "Some result"
   end
 
-  test "parses the result of a query" do
-    assert MapleTest.Client.list_widgets("id") == %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]}
+  test "parses the result of a query into the type of that query" do
+    resp = MapleTest.Client.list_widgets("id")
+    assert is_list(resp)
+    assert %Maple.Types.Widget{} = hd(resp)
   end
 
   test "allows for the passing of options" do
@@ -52,6 +70,6 @@ defmodule MapleTest do
   end
 
   test "creates automatic documentation for a schema" do
-    # assert Code.get_docs(MapleTest.Client, :docs)
+    assert Code.fetch_docs(MapleTest.Client)
   end
 end

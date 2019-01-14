@@ -97,14 +97,14 @@ config :maple,
 ```
 
 - `:build_type_structs` - Default is `false`. If set to `true` the macro will create
-structs for all the fields found in the introspection query. All types are namespaced into
-`Maple.Types.`
+  structs for all the fields found in the introspection query. All types are namespaced into
+  `Maple.Types.`
 
 - `:http_adapter` - The default HTTP adapter for completing transactions against the GraphQL
-server. Default is: `Maple.Clients.Http`
+  server. Default is: `Maple.Clients.Http`
 
 - `:websocket_adapter` - The default Websocket adapter for completing transactions against the GraphQL
-server using websockets. Default is: `Maple.Clients.WebsocketApollo`
+  server using websockets. Default is: `Maple.Clients.WebsocketApollo`
 
 ## Installation
 
@@ -118,7 +118,7 @@ or
 
 ```elixir
 def deps do
-  [{:maple, "~> 0.4.0"}]
+  [{:maple, "~> 0.5.0"}]
 end
 ```
 
@@ -142,21 +142,23 @@ This library is in development.
 
 Contributions and issues welcome!
 
-__Also if you think this is a terrible idea, please let me know!__
+**Also if you think this is a terrible idea, please let me know!**
 
 ## ToDo
 
-- [X] Refactor macro code
-- [X] Add proper documentation
-- [X] Support subscriptions
+- [x] Refactor macro code
+- [x] Add proper documentation
+- [x] Support subscriptions
 - [ ] Support fragments
 - [ ] Look into validation through structs
 - [ ] Alternative syntax for fields
-- [X] Expand help with required attributes
-- [X] Expand help with attribute descriptions
+- [x] Expand help with required attributes
+- [x] Expand help with attribute descriptions
 
 ## License
+
 MIT
 
 ## Version
-0.4.0
+
+0.5.0
