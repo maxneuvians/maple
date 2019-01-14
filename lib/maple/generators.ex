@@ -25,9 +25,7 @@ defmodule Maple.Generators do
               #{unquote(f[:name])}#{if(length(Map.keys(params)) > 0, do: "(#{Maple.Helpers.declare_variables(params, unquote(Macro.escape(f[:param_types])))})")}
               {
                 #{unquote(f[:name])}(#{Maple.Helpers.declare_params(params)})
-                  {
-                    #{fields}
-                  }
+                #{if(fields != "", do: "{#{fields}}")}
               }
             """
             apply(unquote(adapter), :mutate, [Maple.Helpers.remove_whitespaces(mutation), params, options])
