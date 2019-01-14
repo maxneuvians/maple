@@ -11,7 +11,10 @@ defmodule Maple.HttpTestAdapter do
   end
 
   def query("{listWidgets{id}}", %{}, _options) do
-    %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]}
+    %Maple.Response{
+      body: %{"listWidgets" => [%{"id" => "foo"}, %{"id" => "bar"}]},
+      status: 200
+    }
   end
 
   def query(string, %{}, _options) do

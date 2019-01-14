@@ -24,12 +24,14 @@ defmodule MapleTest.Maple.HelpersTest do
     }
     result = Helpers.assign_function_params(data)
     assert result.name == "depListWidgets"
+    assert result.arguments == []
     assert result.function_name == :dep_list_widgets
     assert result.required_params == []
     assert result.param_types == %{}
     assert result.deprecated == true
     assert result.deprecated_reason == "This was a bad idea"
     assert result.description == "No description available\n\n\n"
+    assert result.type == "[Widget]"
   end
 
   test "declare_params/1 creates a GraphQL param list" do
@@ -53,37 +55,6 @@ defmodule MapleTest.Maple.HelpersTest do
     required_params = [:id, :name]
     params = %{id: "Foo"}
     assert Helpers.find_missing(params, required_params) == [:name]
-  end
-
-  test "generate_mutation/2 returns a tuple with an AST for a passed function" do
-    function = %{
-      deprecated: false,
-      deprecated_reason: nil,
-      description: "Desc",
-      function_name: :create_widget,
-      name: "createWidget",
-      param_types:
-        %{
-          "email" => nil,
-          "id" => "ID",
-          "name" => "String"
-        },
-      required_params: [:id, :name]
-    }
-    assert is_tuple(Helpers.generate_mutation(function, :adapter))
-  end
-
-  test "generate_two_arity_query/2 returns a tuple with an AST for a passed function" do
-    function = %{
-      deprecated: false,
-      deprecated_reason: nil,
-      description: "Lists widgets",
-      function_name: :list_widgets,
-      name: "listWidgets",
-      param_types: %{},
-      required_params: []
-    }
-    assert is_tuple(Helpers.generate_two_arity_query(function, :adapter))
   end
 
   test "get_param_types/1 returns a map of params with their GraphQL types" do
